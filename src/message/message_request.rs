@@ -169,8 +169,13 @@ impl RequestHeader {
             },
         }
     }
+    /// calculate the sum of the header fields as an overflowing addition of u8 integers
     pub fn sum(&self) -> u8 {
-        self.head.clone() as u8 + self.len + self.id.clone() as u8
+        (self.head.clone() as u8)
+            .overflowing_add(self.len)
+            .0
+            .overflowing_add(self.id.clone() as u8)
+            .0
     }
 }
 
@@ -258,7 +263,7 @@ pub struct RequestOutputFormat {
 impl RequestOutputFormat {
     pub fn new(format: LidarSettingOutput) -> Self {
         let header = RequestHeader::new(LidarRequestId::OutputFormat);
-        let check_sum = header.sum() + format as u8;
+        let check_sum = header.sum().overflowing_add(format as u8).0;
         Self {
             header,
             format: format as u8,
@@ -296,14 +301,14 @@ impl RequestBaudRate {
 #[repr(C)]
 pub struct RequestOutputEn {
     header: RequestHeader,
-    enable: u8,
+    enable: bool,
     check_sum: u8,
 }
 
 impl RequestOutputEn {
-    pub fn new(enable: u8) -> Self {
+    pub fn new(enable: bool) -> Self {
         let header = RequestHeader::new(LidarRequestId::OutputEn);
-        let check_sum = header.sum() + enable;
+        let check_sum = header.sum().overflowing_add(enable as u8).0;
         Self {
             header,
             enable,
@@ -317,14 +322,14 @@ impl RequestOutputEn {
 #[repr(C)]
 pub struct RequestFrameChecksumEn {
     header: RequestHeader,
-    enable: u8,
+    enable: bool,
     check_sum: u8,
 }
 
 impl RequestFrameChecksumEn {
-    pub fn new(enable: u8) -> Self {
+    pub fn new(enable: bool) -> Self {
         let header = RequestHeader::new(LidarRequestId::FrameChecksumEn);
-        let check_sum = header.sum() + enable;
+        let check_sum = header.sum().overflowing_add(enable as u8).0;
         Self {
             header,
             enable,
@@ -345,7 +350,7 @@ pub struct RequestI2cSlaveAddr {
 impl RequestI2cSlaveAddr {
     pub fn new(i2c_slave_addr: u8) -> Self {
         let header = RequestHeader::new(LidarRequestId::I2cSlaveAddr);
-        let check_sum = header.sum() + i2c_slave_addr;
+        let check_sum = header.sum().overflowing_add(i2c_slave_addr).0;
         Self {
             header,
             i2c_slave_addr,
@@ -474,7 +479,15 @@ pub struct RequestLowConsumption {
 impl RequestLowConsumption {
     pub fn new(sample_rate: u16) -> Self {
         let header = RequestHeader::new(LidarRequestId::LowConsumption);
-        let check_sum = header.sum() + sample_rate.as_bytes().iter().sum::<u8>();
+        let check_sum = header
+            .sum()
+            .overflowing_add(
+                sample_rate
+                    .as_bytes()
+                    .iter()
+                    .fold(0, |old: u8, x: &u8| old.overflowing_add(*x).0),
+            )
+            .0;
         Self {
             header,
             sample_rate: sample_rate.into(),
@@ -498,10 +511,24 @@ pub struct RequestDistLimit {
 impl RequestDistLimit {
     pub fn new(dist_min: u16, dist_max: u16, silence: u8) -> Self {
         let header = RequestHeader::new(LidarRequestId::DistLimit);
-        let check_sum = header.sum()
-            + dist_min.as_bytes().iter().sum::<u8>()
-            + dist_max.as_bytes().iter().sum::<u8>()
-            + silence;
+        let check_sum = header
+            .sum()
+            .overflowing_add(
+                dist_min
+                    .as_bytes()
+                    .iter()
+                    .fold(0, |old: u8, x: &u8| old.overflowing_add(*x).0),
+            )
+            .0
+            .overflowing_add(
+                dist_max
+                    .as_bytes()
+                    .iter()
+                    .fold(0, |old: u8, x: &u8| old.overflowing_add(*x).0),
+            )
+            .0
+            .overflowing_add(silence)
+            .0;
         Self {
             header,
             dist_min: dist_min.into(),
@@ -530,12 +557,36 @@ pub struct RequestOnOffMode {
 impl RequestOnOffMode {
     pub fn new(mode: u8, dist: u16, zone: u16, delay_1: u16, delay_2: u16) -> Self {
         let header = RequestHeader::new(LidarRequestId::OnOffMode);
-        let check_sum = header.sum()
-            + mode
-            + dist.as_bytes().iter().sum::<u8>()
-            + zone.as_bytes().iter().sum::<u8>()
-            + delay_1.as_bytes().iter().sum::<u8>()
-            + delay_2.as_bytes().iter().sum::<u8>();
+        let check_sum = header
+            .sum()
+            .overflowing_add(mode)
+            .0
+            .overflowing_add(
+                dist.as_bytes()
+                    .iter()
+                    .fold(0, |old: u8, x: &u8| old.overflowing_add(*x).0),
+            )
+            .0
+            .overflowing_add(
+                zone.as_bytes()
+                    .iter()
+                    .fold(0, |old: u8, x: &u8| old.overflowing_add(*x).0),
+            )
+            .0
+            .overflowing_add(
+                delay_1
+                    .as_bytes()
+                    .iter()
+                    .fold(0, |old: u8, x: &u8| old.overflowing_add(*x).0),
+            )
+            .0
+            .overflowing_add(
+                delay_2
+                    .as_bytes()
+                    .iter()
+                    .fold(0, |old: u8, x: &u8| old.overflowing_add(*x).0),
+            )
+            .0;
         Self {
             header,
             mode,
@@ -563,9 +614,22 @@ pub struct RequestLowSampleRate {
 impl RequestLowSampleRate {
     pub fn new(output_period_s: u32, one_shot_frames: u32) -> Self {
         let header = RequestHeader::new(LidarRequestId::LowSampleRate);
-        let check_sum = header.sum()
-            + output_period_s.as_bytes().iter().sum::<u8>()
-            + one_shot_frames.as_bytes().iter().sum::<u8>();
+        let check_sum = header
+            .sum()
+            .overflowing_add(
+                output_period_s
+                    .as_bytes()
+                    .iter()
+                    .fold(0, |old: u8, x: &u8| old.overflowing_add(*x).0),
+            )
+            .0
+            .overflowing_add(
+                one_shot_frames
+                    .as_bytes()
+                    .iter()
+                    .fold(0, |old: u8, x: &u8| old.overflowing_add(*x).0),
+            )
+            .0;
         Self {
             header,
             output_period_s: output_period_s.into(),
@@ -587,7 +651,7 @@ pub struct RequestGetConfigPara {
 impl RequestGetConfigPara {
     pub fn new(id_input: u8) -> Self {
         let header = RequestHeader::new(LidarRequestId::GetConfigPara);
-        let check_sum = header.sum() + id_input;
+        let check_sum = header.sum().overflowing_add(id_input).0;
         Self {
             header,
             id_input,
@@ -702,7 +766,7 @@ pub mod tests {
     #[test]
     pub fn test_request_message_output_en() {
         let mut byte_slice = [0u8; 5];
-        RequestOutputEn::new(1).write_to(&mut byte_slice);
+        RequestOutputEn::new(true).write_to(&mut byte_slice);
 
         let byte_slice_cmp = [0x5A, 0x05, 0x07, 0x01, 0x67];
 
@@ -711,7 +775,7 @@ pub mod tests {
     #[test]
     pub fn test_request_frame_checksum_en() {
         let mut byte_slice = [0u8; 5];
-        RequestFrameChecksumEn::new(1).write_to(&mut byte_slice);
+        RequestFrameChecksumEn::new(true).write_to(&mut byte_slice);
 
         let byte_slice_cmp = [0x5A, 0x05, 0x08, 0x01, 0x68];
 

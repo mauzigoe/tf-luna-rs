@@ -64,7 +64,7 @@ pub struct RequestHeader {
 }
 
 impl RequestHeader {
-    /// Return request message header for the respective message [id]
+    /// Return request message header for the respective message identifier `id`
     pub fn new(id: LidarRequestId) -> Self {
         match id {
             LidarRequestId::GetVersion => Self {
@@ -174,7 +174,7 @@ impl RequestHeader {
     }
 }
 
-/// Request lidar version
+/// Request message for the lidar version
 #[derive(Clone, Debug, Format, Immutable, IntoBytes, Unaligned)]
 #[repr(C)]
 pub struct RequestGetVersion {
@@ -206,7 +206,7 @@ impl RequestSoftReset {
     }
 }
 
-/// Request to change sample frequency. If `[freq] == 0` trigger mode is used.
+/// Request to change sample frequency. If `[RequestSampleFreq::freq] == 0` trigger mode is used.
 #[derive(Clone, Debug, Format, Immutable, IntoBytes, Unaligned)]
 #[repr(C)]
 pub struct RequestSampleFreq {
@@ -230,7 +230,7 @@ impl RequestSampleFreq {
     }
 }
 
-/// Request to start a measurement.
+/// Request message to trigger a measurement.
 #[derive(Clone, Debug, Format, Immutable, IntoBytes, Unaligned)]
 #[repr(C)]
 pub struct RequestSampleTrig {
@@ -246,7 +246,7 @@ impl RequestSampleTrig {
     }
 }
 
-/// Request for the current output format.
+/// Request message for the current output format.
 #[derive(Clone, Debug, Format, Immutable, IntoBytes, Unaligned)]
 #[repr(C)]
 pub struct RequestOutputFormat {
@@ -267,7 +267,7 @@ impl RequestOutputFormat {
     }
 }
 
-/// Reqeuest for the current baudrate
+/// Reqeuest message for the current baudrate
 #[derive(Clone, Debug, Format, Immutable, IntoBytes, Unaligned)]
 #[repr(C)]
 pub struct RequestBaudRate {
@@ -312,7 +312,7 @@ impl RequestOutputEn {
     }
 }
 
-/// Request to check messages via [`check_sum`] field
+/// Request to enable checking of checksums for messages
 #[derive(Clone, Debug, Format, Immutable, IntoBytes, Unaligned)]
 #[repr(C)]
 pub struct RequestFrameChecksumEn {
@@ -333,7 +333,7 @@ impl RequestFrameChecksumEn {
     }
 }
 
-/// Request the I2c slave address
+/// Request message for the I2C slave address
 #[derive(Clone, Debug, Format, Immutable, IntoBytes, Unaligned)]
 #[repr(C)]
 pub struct RequestI2cSlaveAddr {
@@ -354,7 +354,7 @@ impl RequestI2cSlaveAddr {
     }
 }
 
-/// Request to restore default settings
+/// Request message to restore default settings
 #[derive(Clone, Debug, Format, Immutable, IntoBytes, Unaligned)]
 #[repr(C)]
 pub struct RequestRestoreDefault {
@@ -441,7 +441,7 @@ impl RequestAmpThreshold {
     }
 }
 
-/// Request to set timestamp to specific value [std]
+/// Request message to set timestamp to specific value `std`
 #[derive(Clone, Debug, Format, Immutable, IntoBytes, Unaligned)]
 #[repr(C)]
 pub struct RequestTimestampSync {
@@ -484,7 +484,7 @@ impl RequestLowConsumption {
 }
 
 /// Request to set minimum and maximum distance output.
-/// Optionally via [silence], disable output if data crosses the boundaries
+/// Optionally via `silence`, disable output if data crosses the boundaries
 #[derive(Clone, Debug, Format, Immutable, IntoBytes, Unaligned)]
 #[repr(C)]
 pub struct RequestDistLimit {
@@ -548,9 +548,9 @@ impl RequestOnOffMode {
     }
 }
 
-/// Request to use low sample rate. [output_period_s]>0 sets the periodic sample rate
-/// with rates greater than 1Hz. [one_shot_frame]>0 sets period (s) during which the average
-/// distance is measured, after each [output_period_s].
+/// Request to use low sample rate. `output_period_s`>0 sets the periodic sample rate
+/// with rates greater than 1Hz. `one_shot_frame`>0 sets period (s) during which the average
+/// distance is measured, after each `output_period_s`.
 #[derive(Clone, Debug, Format, Immutable, IntoBytes, Unaligned)]
 #[repr(C)]
 pub struct RequestLowSampleRate {
@@ -583,7 +583,7 @@ pub struct RequestGetConfigPara {
     check_sum: u8,
 }
 
-/// Request Config parameter via message id [id_input]
+/// Request Config parameter via message id `id_input`
 impl RequestGetConfigPara {
     pub fn new(id_input: u8) -> Self {
         let header = RequestHeader::new(LidarRequestId::GetConfigPara);

@@ -174,7 +174,7 @@ pub enum LidarResponse {
     LowConsumption(ResponseLowConsumption),
     /// Response messages for Request [DistLimit][crate::message::message_request::RequestDistLimit]
     DistLimit(ResponseDistLimit),
-    /// Response messages for Request [LowSampleRate][crate::message::message_request::LowSampleRate]
+    /// Response messages for Request [LowSampleRate][crate::message::message_request::RequestLowSampleRate]
     LowSampleRate(ResponseLowSampleRate),
     /// Response messages for Request [I2cSlaveAddr][crate::message::message_request::RequestI2cSlaveAddr]
     I2cSlaveAddress(ResponseI2cSlaveAddress),

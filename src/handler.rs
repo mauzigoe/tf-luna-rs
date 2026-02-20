@@ -194,7 +194,6 @@ impl<const READ_BUF_SIZE: usize, WriteBuf: Write> TfLunaDriver<READ_BUF_SIZE, Wr
         };
         Ok(None)
     }
-
     pub fn read_next(&mut self) -> Option<LidarOutput> {
         if self.length_of_read_buffer() < 8 {
             return None;

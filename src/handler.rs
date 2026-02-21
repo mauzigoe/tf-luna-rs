@@ -50,20 +50,20 @@ struct LidarSettings {
 }
 
 /// Handler to interact with the TF Luna Lidar Sensor
-pub struct TfLunaDriver<const READ_BUF_SIZE: usize, WriteBuf: Write + 'static> {
+pub struct TfLunaDriver<'a, const READ_BUF_SIZE: usize, WriteBuf: Write + 'a> {
     /// Store of TfLuna Lidar Driver Settings
     settings: LidarSettings,
     /// Interface to write peripheral buffer driver (uart/i2c)
-    write_interface: &'static Mutex<RefCell<Option<WriteBuf>>>,
+    write_interface: &'a Mutex<RefCell<Option<WriteBuf>>>,
     /// Interface to read from received uart/i2c inputs (uart/i2c)
     // TODO: Replace with Read Interface
-    read_buf: &'static Mutex<RefCell<CircularBuffer<READ_BUF_SIZE, u8>>>,
+    read_buf: &'a Mutex<RefCell<CircularBuffer<READ_BUF_SIZE, u8>>>,
 }
 
-impl<const READ_BUF_SIZE: usize, WriteBuf: Write> TfLunaDriver<READ_BUF_SIZE, WriteBuf> {
+impl<'a, const READ_BUF_SIZE: usize, WriteBuf: Write + 'a> TfLunaDriver<'a, READ_BUF_SIZE, WriteBuf> {
     pub fn new(
-        read_buf: &'static Mutex<RefCell<CircularBuffer<READ_BUF_SIZE, u8>>>,
-        write_interface: &'static Mutex<RefCell<Option<WriteBuf>>>,
+        read_buf: &'a Mutex<RefCell<CircularBuffer<READ_BUF_SIZE, u8>>>,
+        write_interface: &'a Mutex<RefCell<Option<WriteBuf>>>,
     ) -> Self {
         let settings = LidarSettings {
             output: LidarSettingOutput::NineBytePerCm,

@@ -61,6 +61,7 @@ pub struct TfLunaDriver<'a, const READ_BUF_SIZE: usize, WriteBuf: Write + 'a> {
 }
 
 impl<'a, const READ_BUF_SIZE: usize, WriteBuf: Write + 'a> TfLunaDriver<'a, READ_BUF_SIZE, WriteBuf> {
+    /// Return a lidar handler
     pub fn new(
         read_buf: &'a Mutex<RefCell<CircularBuffer<READ_BUF_SIZE, u8>>>,
         write_interface: &'a Mutex<RefCell<Option<WriteBuf>>>,

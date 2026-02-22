@@ -52,7 +52,6 @@ pub struct OutputWithDeviceId {
 }
 
 /// Encapsulation of the different lidar data output
-
 #[derive(Clone, Debug, Format)]
 pub enum LidarData {
     NineBytePerCm(NineBytePerCm),

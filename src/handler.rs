@@ -74,10 +74,10 @@ impl<'a, const READ_BUF_SIZE: usize, WriteBuf: Write + 'a> TfLunaDriver<'a, READ
             write_interface,
         }
     }
-    pub fn length_of_read_buffer(&self) -> usize {
+    fn length_of_read_buffer(&self) -> usize {
         critical_section::with(|cs| self.read_buf.borrow_ref(cs).len())
     }
-    pub fn read_next_inner_response(id: ResponseIdType, read_buf: &[u8]) -> Option<LidarResponse> {
+    fn read_next_response_inner(id: ResponseIdType, read_buf: &[u8]) -> Option<LidarResponse> {
         match id {
             ResponseIdType::GetVersion => ResponseGetVersion::read_from_bytes(read_buf)
                 .ok()
@@ -118,7 +118,7 @@ impl<'a, const READ_BUF_SIZE: usize, WriteBuf: Write + 'a> TfLunaDriver<'a, READ
             _ => None,
         }
     }
-    pub fn read_next_inner_data(
+    fn read_next_data_inner(
         setting: LidarSettingOutput,
         read_buf: &[u8],
     ) -> Option<(LidarData, usize)> {

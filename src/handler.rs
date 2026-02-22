@@ -206,14 +206,14 @@ impl<'a, const READ_BUF_SIZE: usize, WriteBuf: Write + 'a> TfLunaDriver<'a, READ
             match LidarOutputHeader::try_read_from_prefix(read_buf_slice_first) {
                 Ok((LidarOutputHeader(DATA_BYTE, DATA_BYTE), rest)) => {
                     let (data, size) =
-                        Self::read_next_inner_data(self.settings.output.clone(), rest)?;
+                        Self::read_next_data_inner(self.settings.output.clone(), rest)?;
                     read_buf.drain(0..size);
                     Some(LidarOutput::Data(data))
                 }
                 Ok((LidarOutputHeader(RESPONSE_BYTE, len), rest)) => {
                     println!("Response");
                     let (id, rest) = ResponseIdType::try_read_from_prefix(rest).ok()?;
-                    let data = Self::read_next_inner_response(id, rest)?;
+                    let data = Self::read_next_response_inner(id, rest)?;
                     let ret = Some(LidarOutput::Response(data));
                     read_buf.drain(0..len as usize);
                     ret

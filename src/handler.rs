@@ -146,6 +146,9 @@ impl<'a, const READ_BUF_SIZE: usize, WriteBuf: Write + 'a> TfLunaDriver<'a, READ
             _ => None,
         }
     }
+    /// Send an requets to the lidar and (blocking) wait a response.
+    ///
+    /// While waiting received lidar data is discarded
     pub fn make_request(
         &mut self,
         lidar_request: LidarRequest,
@@ -195,6 +198,7 @@ impl<'a, const READ_BUF_SIZE: usize, WriteBuf: Write + 'a> TfLunaDriver<'a, READ
         };
         Ok(None)
     }
+    /// Read next received message from a circular buffer
     pub fn read_next(&mut self) -> Option<LidarOutput> {
         if self.length_of_read_buffer() < 8 {
             return None;

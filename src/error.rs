@@ -7,4 +7,6 @@ pub enum LidarError {
     RequestFailed,
     /// Tf Luna's `W: Write` interface is not initaialized
     WriteInterfaceNotInitialized,
+    /// Write to buffer of the TF Luna handler failed
+    WriteToHandlerBufferFailed,
 }

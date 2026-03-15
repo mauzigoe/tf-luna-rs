@@ -6,7 +6,7 @@ edition = "2024"
 
 [dependencies]
 critical-section = "1.2.0"
-circular-buffer = { version = "1.1.0", default-features = false}
+circular-buffer = { version = "1.1.0", default-features = false, features = ["embedded-io"]}
 defmt = "0.3.10"
 defmt-rtt = "0.4.1"
 embedded-io = "0.6.1"

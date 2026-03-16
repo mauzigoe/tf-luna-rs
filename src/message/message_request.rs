@@ -10,6 +10,7 @@ const LIDAR_REQUEST_HEAD: u8 = 0x5A;
 /// Enumeration of the request messgage identifiers
 #[derive(Clone, Copy, Debug, Format, Immutable, IntoBytes, Unaligned)]
 #[repr(u8)]
+#[allow(missing_docs)]
 pub enum LidarRequestId {
     GetVersion = 0x01,
     SoftReset = 0x02,
@@ -188,6 +189,7 @@ pub struct RequestGetVersion {
 }
 
 impl RequestGetVersion {
+    #[allow(missing_docs)]
     pub fn new() -> Self {
         let header = RequestHeader::new(LidarRequestId::GetVersion);
         let check_sum: u8 = header.sum();
@@ -204,6 +206,7 @@ pub struct RequestSoftReset {
 }
 
 impl RequestSoftReset {
+    #[allow(missing_docs)]
     pub fn new() -> Self {
         let header = RequestHeader::new(LidarRequestId::SoftReset);
         let check_sum = header.sum();
@@ -221,6 +224,7 @@ pub struct RequestSampleFreq {
 }
 
 impl RequestSampleFreq {
+    #[allow(missing_docs)]
     pub fn new(freq: u16) -> Self {
         let header = RequestHeader::new(LidarRequestId::SampleFreq);
         let check_sum: u8 = header
@@ -244,6 +248,7 @@ pub struct RequestSampleTrig {
 }
 
 impl RequestSampleTrig {
+    #[allow(missing_docs)]
     pub fn new() -> Self {
         let header = RequestHeader::new(LidarRequestId::SampleTrig);
         let check_sum = header.sum();
@@ -261,6 +266,7 @@ pub struct RequestOutputFormat {
 }
 
 impl RequestOutputFormat {
+    #[allow(missing_docs)]
     pub fn new(format: LidarSettingOutput) -> Self {
         let header = RequestHeader::new(LidarRequestId::OutputFormat);
         let check_sum = header.sum().overflowing_add(format as u8).0;
@@ -282,6 +288,7 @@ pub struct RequestBaudRate {
 }
 
 impl RequestBaudRate {
+    #[allow(missing_docs)]
     pub fn new(baudrate: u32) -> Self {
         let header = RequestHeader::new(LidarRequestId::BaudRate);
         let check_sum = header
@@ -306,6 +313,7 @@ pub struct RequestOutputEn {
 }
 
 impl RequestOutputEn {
+    #[allow(missing_docs)]
     pub fn new(enable: bool) -> Self {
         let header = RequestHeader::new(LidarRequestId::OutputEn);
         let check_sum = header.sum().overflowing_add(enable as u8).0;
@@ -327,6 +335,7 @@ pub struct RequestFrameChecksumEn {
 }
 
 impl RequestFrameChecksumEn {
+    #[allow(missing_docs)]
     pub fn new(enable: bool) -> Self {
         let header = RequestHeader::new(LidarRequestId::FrameChecksumEn);
         let check_sum = header.sum().overflowing_add(enable as u8).0;
@@ -348,6 +357,7 @@ pub struct RequestI2cSlaveAddr {
 }
 
 impl RequestI2cSlaveAddr {
+    #[allow(missing_docs)]
     pub fn new(i2c_slave_addr: u8) -> Self {
         let header = RequestHeader::new(LidarRequestId::I2cSlaveAddr);
         let check_sum = header.sum().overflowing_add(i2c_slave_addr).0;
@@ -368,6 +378,7 @@ pub struct RequestRestoreDefault {
 }
 
 impl RequestRestoreDefault {
+    #[allow(missing_docs)]
     pub fn new() -> Self {
         let header = RequestHeader::new(LidarRequestId::RestoreDefault);
         let check_sum = header.sum();
@@ -384,6 +395,7 @@ pub struct RequestSaveSettings {
 }
 
 impl RequestSaveSettings {
+    #[allow(missing_docs)]
     pub fn new() -> Self {
         let header = RequestHeader::new(LidarRequestId::SaveSettings);
         let check_sum = header.sum();
@@ -394,12 +406,14 @@ impl RequestSaveSettings {
 // Request product bar code
 #[derive(Clone, Debug, Format, Immutable, IntoBytes, Unaligned)]
 #[repr(C)]
+#[allow(missing_docs)]
 pub struct RequestReadManuBin {
     header: RequestHeader,
     check_sum: u8,
 }
 
 impl RequestReadManuBin {
+    #[allow(missing_docs)]
     pub fn new() -> Self {
         let header = RequestHeader::new(LidarRequestId::ReadManuBin);
         let check_sum = header.sum();
@@ -416,6 +430,7 @@ pub struct RequestGetFullVersion {
 }
 
 impl RequestGetFullVersion {
+    #[allow(missing_docs)]
     pub fn new() -> Self {
         let header = RequestHeader::new(LidarRequestId::GetFullVersion);
         let check_sum = header.sum();
@@ -426,6 +441,7 @@ impl RequestGetFullVersion {
 // Request amp threshold
 #[derive(Clone, Debug, Format, Immutable, IntoBytes, Unaligned)]
 #[repr(C)]
+#[allow(missing_docs)]
 pub struct RequestAmpThreshold {
     header: RequestHeader,
     amp_threshold: u8,
@@ -434,6 +450,7 @@ pub struct RequestAmpThreshold {
 }
 
 impl RequestAmpThreshold {
+    #[allow(missing_docs)]
     pub fn new(amp_threshold: u8, dummy_dist: u16) -> Self {
         let header = RequestHeader::new(LidarRequestId::AmpThreshold);
         let check_sum = header.sum();
@@ -456,6 +473,7 @@ pub struct RequestTimestampSync {
 }
 
 impl RequestTimestampSync {
+    #[allow(missing_docs)]
     pub fn new(std: u32) -> Self {
         let header = RequestHeader::new(LidarRequestId::TimestampSync);
         let check_sum = header.sum();
@@ -477,6 +495,7 @@ pub struct RequestLowConsumption {
 }
 
 impl RequestLowConsumption {
+    #[allow(missing_docs)]
     pub fn new(sample_rate: u16) -> Self {
         let header = RequestHeader::new(LidarRequestId::LowConsumption);
         let check_sum = header
@@ -509,6 +528,7 @@ pub struct RequestDistLimit {
 }
 
 impl RequestDistLimit {
+    #[allow(missing_docs)]
     pub fn new(dist_min: u16, dist_max: u16, silence: u8) -> Self {
         let header = RequestHeader::new(LidarRequestId::DistLimit);
         let check_sum = header
@@ -555,6 +575,7 @@ pub struct RequestOnOffMode {
 }
 
 impl RequestOnOffMode {
+    #[allow(missing_docs)]
     pub fn new(mode: u8, dist: u16, zone: u16, delay_1: u16, delay_2: u16) -> Self {
         let header = RequestHeader::new(LidarRequestId::OnOffMode);
         let check_sum = header
@@ -612,6 +633,7 @@ pub struct RequestLowSampleRate {
 }
 
 impl RequestLowSampleRate {
+    #[allow(missing_docs)]
     pub fn new(output_period_s: u32, one_shot_frames: u32) -> Self {
         let header = RequestHeader::new(LidarRequestId::LowSampleRate);
         let check_sum = header
@@ -641,6 +663,7 @@ impl RequestLowSampleRate {
 
 #[derive(Clone, Debug, Format, Immutable, IntoBytes, Unaligned)]
 #[repr(C)]
+#[allow(missing_docs)]
 pub struct RequestGetConfigPara {
     header: RequestHeader,
     id_input: u8,
@@ -649,6 +672,7 @@ pub struct RequestGetConfigPara {
 
 /// Request Config parameter via message id `id_input`
 impl RequestGetConfigPara {
+    #[allow(missing_docs)]
     pub fn new(id_input: u8) -> Self {
         let header = RequestHeader::new(LidarRequestId::GetConfigPara);
         let check_sum = header.sum().overflowing_add(id_input).0;
@@ -662,6 +686,7 @@ impl RequestGetConfigPara {
 
 /// Request Message sent to the Lidar. See Tf Luna manual
 #[derive(Clone, Debug, Format)]
+#[allow(missing_docs)]
 pub enum LidarRequest {
     GetVersion(RequestGetVersion),
     SoftReset(RequestSoftReset),

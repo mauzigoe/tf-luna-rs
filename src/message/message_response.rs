@@ -134,6 +134,7 @@ pub struct ResponseLowSampleRate {
 /// Enumration of response identifiers
 #[derive(Clone, Debug, Format, TryFromBytes)]
 #[repr(u8)]
+#[allow(missing_docs)]
 pub enum ResponseIdType {
     IdZeroOutput = 0u8.to_le(),
     GetVersion = 1u8.to_le(),

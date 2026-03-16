@@ -3,6 +3,7 @@ use zerocopy_derive::{FromBytes, TryFromBytes};
 
 use super::endian::{U16LE, U32LE};
 
+/// Calculate checksum over an array of length `len`
 pub fn calc_checksum(buf: &[u8], len: usize) -> u8 {
     let mut sum: u8 = 0;
     for x in buf[0..len].iter() {

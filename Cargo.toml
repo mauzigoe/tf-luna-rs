@@ -1,8 +1,11 @@
 [package]
-name = "host"
+name = "tf-luna-rs"
 version = "0.1.0"
 authors = ["Frangen, Leon <lesoftware@proton.me>"]
 edition = "2024"
+description = "A driver implementation for the lidar TF Luna from Benewake"
+repository = "https://github.com/mauzigoe/tf-luna-rs"
+license = "GPL-3.0"
 
 [dependencies]
 critical-section = "1.2.0"

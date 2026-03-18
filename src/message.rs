@@ -58,7 +58,7 @@ pub(crate) fn waits_for_response(req: &LidarRequest) -> bool {
 
 /// Check if reqeuest matches the response as expected
 /// TODO: Change in the future as method for [LidarRequest] with additional check for content
-pub fn req_matches_res(req: &LidarRequest, res: &LidarResponse) -> bool {
+pub(crate) fn req_matches_res(req: &LidarRequest, res: &LidarResponse) -> bool {
     match (req, res) {
         (LidarRequest::GetVersion(_), LidarResponse::GetVersion(_)) => true,
         (LidarRequest::SoftReset(_), LidarResponse::SoftReset(_)) => true,

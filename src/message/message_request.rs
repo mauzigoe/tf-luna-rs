@@ -663,19 +663,19 @@ impl RequestLowSampleRate {
 
 #[derive(Clone, Debug, Format, Immutable, IntoBytes, Unaligned)]
 #[repr(C)]
-#[allow(missing_docs)]
+/// Request the Config Parameter for a given Request ID `id_input`
 pub struct RequestGetConfigPara {
     header: RequestHeader,
-    id_input: u8,
+    id_input: LidarRequestId,
     check_sum: u8,
 }
 
 /// Request Config parameter via message id `id_input`
 impl RequestGetConfigPara {
     #[allow(missing_docs)]
-    pub fn new(id_input: u8) -> Self {
+    pub fn new(id_input: LidarRequestId) -> Self {
         let header = RequestHeader::new(LidarRequestId::GetConfigPara);
-        let check_sum = header.sum().overflowing_add(id_input).0;
+        let check_sum = header.sum().overflowing_add(id_input as u8).0;
         Self {
             header,
             id_input,

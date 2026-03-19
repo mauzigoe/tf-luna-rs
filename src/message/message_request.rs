@@ -724,9 +724,7 @@ pub mod tests {
     use zerocopy::IntoBytes;
 
     use crate::message::message_request::{
-        RequestBaudRate, RequestFrameChecksumEn, RequestGetVersion, RequestI2cSlaveAddr,
-        RequestOutputEn, RequestOutputFormat, RequestRestoreDefault, RequestSampleFreq,
-        RequestSampleTrig, RequestSoftReset, overflowing_sum,
+        overflowing_sum, RequestAmpThreshold, RequestBaudRate, RequestFrameChecksumEn, RequestGetFullVersion, RequestGetVersion, RequestI2cSlaveAddr, RequestOutputEn, RequestOutputFormat, RequestReadManuBin, RequestRestoreDefault, RequestSampleFreq, RequestSampleTrig, RequestSaveSettings, RequestSoftReset
     };
 
     #[test]
@@ -739,7 +737,7 @@ pub mod tests {
     #[test]
     pub fn test_request_message_get_version() {
         let mut byte_slice = [0u8; 4];
-        RequestGetVersion::new().write_to(&mut byte_slice);
+        RequestGetVersion::new().write_to(&mut byte_slice).unwrap();
 
         let byte_slice_cmp = [0x5A, 0x4, 0x1, 0x5F];
 
@@ -748,7 +746,7 @@ pub mod tests {
     #[test]
     pub fn test_request_message_soft_reset() {
         let mut byte_slice = [0u8; 4];
-        RequestSoftReset::new().write_to(&mut byte_slice);
+        RequestSoftReset::new().write_to(&mut byte_slice).unwrap();
 
         let byte_slice_cmp = [0x5A, 0x4, 0x2, 0x60];
 
@@ -757,7 +755,7 @@ pub mod tests {
     #[test]
     pub fn test_request_message_sample_freq() {
         let mut byte_slice = [0u8; 6];
-        RequestSampleFreq::new(10).write_to(&mut byte_slice);
+        RequestSampleFreq::new(10).write_to(&mut byte_slice).unwrap();
 
         let byte_slice_cmp = [0x5A, 0x6, 0x3, 0xA, 0x0, 0x6D];
 
@@ -766,7 +764,7 @@ pub mod tests {
     #[test]
     pub fn test_request_message_sample_trig() {
         let mut byte_slice = [0u8; 4];
-        RequestSampleTrig::new().write_to(&mut byte_slice);
+        RequestSampleTrig::new().write_to(&mut byte_slice).unwrap();
 
         let byte_slice_cmp = [0x5A, 0x4, 0x4, 0x62];
 
@@ -776,7 +774,7 @@ pub mod tests {
     pub fn test_request_message_output_format() {
         let mut byte_slice = [0u8; 5];
         RequestOutputFormat::new(crate::handler::LidarSettingOutput::NineBytePerCm)
-            .write_to(&mut byte_slice);
+            .write_to(&mut byte_slice).unwrap();
 
         let byte_slice_cmp = [0x5A, 0x5, 0x5, 0x01, 0x65];
 
@@ -785,7 +783,7 @@ pub mod tests {
     #[test]
     pub fn test_request_message_id_baud_rate() {
         let mut byte_slice = [0u8; 8];
-        RequestBaudRate::new(115200).write_to(&mut byte_slice);
+        RequestBaudRate::new(115200).write_to(&mut byte_slice).unwrap();
 
         let byte_slice_cmp = [0x5A, 0x08, 0x06, 0x00, 0xC2, 0x01, 0x0, 0x2B];
 
@@ -794,7 +792,7 @@ pub mod tests {
     #[test]
     pub fn test_request_message_output_en() {
         let mut byte_slice = [0u8; 5];
-        RequestOutputEn::new(true).write_to(&mut byte_slice);
+        RequestOutputEn::new(true).write_to(&mut byte_slice).unwrap();
 
         let byte_slice_cmp = [0x5A, 0x05, 0x07, 0x01, 0x67];
 
@@ -803,7 +801,7 @@ pub mod tests {
     #[test]
     pub fn test_request_frame_checksum_en() {
         let mut byte_slice = [0u8; 5];
-        RequestFrameChecksumEn::new(true).write_to(&mut byte_slice);
+        RequestFrameChecksumEn::new(true).write_to(&mut byte_slice).unwrap();
 
         let byte_slice_cmp = [0x5A, 0x05, 0x08, 0x01, 0x68];
 
@@ -812,7 +810,7 @@ pub mod tests {
     #[test]
     pub fn test_request_i2c_slave_address() {
         let mut byte_slice = [0u8; 5];
-        RequestI2cSlaveAddr::new(32).write_to(&mut byte_slice);
+        RequestI2cSlaveAddr::new(32).write_to(&mut byte_slice).unwrap();
 
         let byte_slice_cmp = [0x5A, 0x05, 0x0B, 0x20, 0x8A];
 
@@ -821,9 +819,48 @@ pub mod tests {
     #[test]
     pub fn test_request_restore_default() {
         let mut byte_slice = [0u8; 4];
-        RequestRestoreDefault::new().write_to(&mut byte_slice);
+        RequestRestoreDefault::new().write_to(&mut byte_slice).unwrap();
 
         let byte_slice_cmp = [0x5A, 0x04, 0x10, 0x6E];
+
+        assert_eq!(byte_slice, byte_slice_cmp);
+    }
+    #[test]
+    pub fn test_request_save_settings() {
+        let mut byte_slice = [0u8; 4];
+        RequestSaveSettings::new().write_to(&mut byte_slice).unwrap();
+
+        let byte_slice_cmp = [0x5A, 0x04, 0x11, 0x6F];
+
+        assert_eq!(byte_slice, byte_slice_cmp);
+    }
+    #[test]
+    pub fn test_request_read_manu_bin() {
+        let mut byte_slice = [0u8; 4];
+        RequestReadManuBin::new().write_to(&mut byte_slice).unwrap();
+
+        let byte_slice_cmp = [0x5A, 0x04, 0x12, 0x70];
+
+        assert_eq!(byte_slice, byte_slice_cmp);
+    }
+    #[test]
+    pub fn test_request_get_full_version() {
+        let mut byte_slice = [0u8; 4];
+        RequestGetFullVersion::new().write_to(&mut byte_slice).unwrap();
+
+        let byte_slice_cmp = [0x5A, 0x04, 0x14, 0x72];
+
+        assert_eq!(byte_slice, byte_slice_cmp);
+    }
+    #[test]
+    pub fn test_request_amp_threshold() {
+        let mut byte_slice = [0u8; 7];
+	let amp_threshold = 0x10;
+	let dummy_dist = 0u16;
+	let [dummy_dist_first, dummy_dist_second] = dummy_dist.to_le_bytes();
+        RequestAmpThreshold::new(amp_threshold, dummy_dist).write_to(&mut byte_slice).unwrap();
+
+        let byte_slice_cmp = [0x5A, 0x07, 0x22, amp_threshold, dummy_dist_first, dummy_dist_second, 0x83];
 
         assert_eq!(byte_slice, byte_slice_cmp);
     }

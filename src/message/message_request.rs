@@ -710,6 +710,9 @@ pub enum LidarRequest {
     GetConfigPara(RequestGetConfigPara),
 }
 
+/// Overflowing sum of a byte array
+///
+/// Used to calculate the checksum 
 pub(crate) fn overflowing_sum(bytes: &[u8]) -> u8 {
     bytes
         .iter()

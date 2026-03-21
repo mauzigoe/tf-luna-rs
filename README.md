@@ -2,7 +2,7 @@
 
 Rust-based driver implementation for the [TF Luna Lidar](https://en.benewake.com/TFLuna/index.html) from Benewake. It offers the capability to decode the data and responses sent from the lidar.
 
-## Usage
+## Interface
 
 After initialization via `TfLunaDriver<_,_>::new()` the interface can be used via methods `make_request` to send configuration requests to the lidar or receive data via `read_next`
 

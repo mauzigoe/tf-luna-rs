@@ -17,3 +17,7 @@ Sends a request to a transmit buffer (e.g. UART) and waits for a response messag
 ### Interrupts
 
 To handle data received via UART/I2C, `crate::interrupts` contains an example how to pass received bytes from a UART/I2C buffer to the buffer referenced by the handler.
+
+## Example 
+
+This [repository](https://github.com/mauzigoe/tf-luna-rs-esp32-example) contains an usage example of the library on the [ESP32-C3-Mini-1 board](https://documentation.espressif.com/esp32-c3-mini-1_datasheet_en.pdf).

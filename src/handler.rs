@@ -44,9 +44,22 @@ pub enum LidarSettingOutput {
     OutputWithDeviceId = 0x0A,
 }
 
+/// Configuration of the Tf Luna and how distance data is sent
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct LidarSettingDistLimit {
+    lower_cm: u16,
+    upper_cm: u16
+}
+
+impl LidarSettingDistLimit {
+    pub fn get_lower_limit_cm(&self) -> u16 { self.lower_cm }
+    pub fn get_upper_limit_cm(&self) -> u16 { self.upper_cm }
+}
+
 /// Current used lidar setting
-struct LidarSettings {
-    output: LidarSettingOutput,
+pub struct LidarSettings {
+    pub output: LidarSettingOutput,
+    pub dist_limit: LidarSettingDistLimit,
 }
 
 /// Handler to interact with the TF Luna Lidar Sensor
@@ -68,6 +81,7 @@ impl<'a, const READ_BUF_SIZE: usize, WriteBuf: Write + 'a> TfLunaDriver<'a, READ
     ) -> Self {
         let settings = LidarSettings {
             output: LidarSettingOutput::NineBytePerCm,
+            dist_limit: LidarSettingDistLimit { lower_cm: 0, upper_cm: 800 },
         };
         Self {
             settings,
@@ -212,7 +226,11 @@ impl<'a, const READ_BUF_SIZE: usize, WriteBuf: Write + 'a> TfLunaDriver<'a, READ
                     let (data, size) =
                         Self::read_next_data_inner(self.settings.output.clone(), rest)?;
                     read_buf.drain(0..size);
-                    Some(LidarOutput::Data(data))
+		    if data.datapoint_is_valid(&self.settings) {
+			Some(LidarOutput::Data(data))
+		    } else {
+			None
+		    }
                 }
                 Ok((LidarOutputHeader(RESPONSE_BYTE, len), rest)) => {
                     let (id, rest) = ResponseIdType::try_read_from_prefix(rest).ok()?;

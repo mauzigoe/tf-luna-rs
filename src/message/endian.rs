@@ -19,6 +19,12 @@ impl From<u16> for U16LE {
     }
 }
 
+impl Into<u16> for U16LE {
+    fn into(self) -> u16 {
+	self.0.get()
+    }
+}
+
 /// [zerocopy::byteorder::U32] wrapper to implement [defmt::Format]
 #[derive(Clone, Debug, FromBytes, IntoBytes, KnownLayout, Immutable, Unaligned)]
 #[repr(C)]
